@@ -6,10 +6,10 @@ function beta = compute_beta (u)
     global params
     
     if strcmp(params.active_beta,'central')
-        ux_x = params.D1x*u(:,:,1) ;
-        ux_y = u(:,:,1)*params.D1y' ;
-        uy_x = params.D1x*u(:,:,2) ;
-        uy_y = u(:,:,2)*params.D1y' ;
+        ux_x = cofdx_fd( u(:,:,1), D1(params.nx,params.dx) );
+        ux_y = cofdy_fd( u(:,:,1), D1(params.ny,params.dy) );
+        uy_x = cofdx_fd( u(:,:,2), D1(params.nx,params.dx) );
+        uy_y = cofdy_fd( u(:,:,2), D1(params.ny,params.dy) );
         
     elseif strcmp(params.active_beta,'upwind')
         [ux_x,ux_y,uy_x,uy_y] = upwind_differences(u);

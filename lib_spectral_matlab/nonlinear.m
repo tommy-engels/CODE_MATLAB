@@ -21,6 +21,8 @@ function [nlk] = nonlinear (uk, u, penal, diffusion)
             diffusion='no';
         case 3
             diffusion='no';
+        otherwise
+            error('nonlinear: not enough input arguments')
     end
     
     vor = cofitxy( vorticity_2d(uk) );

@@ -1,7 +1,7 @@
 function main
     clear all
 %     close all    
-    [e] = simulation ( 2e-5, 128, @EE1_adjoint_pressure, 0.3 );
+    [e] = simulation ( 1e-3, 128, @RK2_dave, 0.3 );
 end
 
 function [e1] = simulation ( eps, nx, method, CFL )
@@ -13,7 +13,7 @@ restoredefaultpath;
 addpath(genpath('./lib_spectral_matlab/'))
 addpath(genpath('./lib_active/'))
 addpath(genpath('./lib_finite_differences_matlab/'))
-addpath(genpath('./case_vortex_pair/'))
+addpath(genpath('./case_lamballais/'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % some parameters are set here
@@ -28,7 +28,7 @@ params.iplot=100;
 
 
 % active penalization (only with RK2_dave currently)
-params.active='passive'; % 'chantalat', 'dave'
+params.active='dave'; % 'chantalat', 'dave', 'passive'
 % how to compute the beta field?
 params.active_beta='central';% 'upwind', 'spectral'
 % time stepper for chantalat's advection-diffusion eqn

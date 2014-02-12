@@ -4,7 +4,7 @@ function [u_new, uk_new, pk] = RK2_dave(u,uk,pk,dt)
     pk = pk*0; % dummy argument
     
     % compute non-linear terms
-    nlk = nonlinear (uk, 'no');
+    nlk = nonlinear (uk, u, 'no');
     divu = cofitxy(divergence_2d(uk));
     qk = fft2( ((1-params.mask)/params.eta).*divu ) + divergence_2d(nlk);
     qk = poisson(qk);
@@ -22,7 +22,7 @@ function [u_new, uk_new, pk] = RK2_dave(u,uk,pk,dt)
     u_new = cofitxy_2d (uk_new);
         
     % end of euler step , now doing correction step
-    nlk2 = nonlinear(uk_new, 'no');    
+    nlk2 = nonlinear(uk_new, u_new,  'no');    
     divu = cofitxy(divergence_2d(uk_new));
     qk = fft2( ((1-params.mask)/params.eta).*divu ) + divergence_2d(nlk2);
     qk = poisson(qk);
