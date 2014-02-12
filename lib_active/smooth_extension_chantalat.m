@@ -1,31 +1,12 @@
-function smooth_extension_chantalat ( u, iActive )
+function u_smooth = smooth_extension_chantalat ( u )
     global params
+    u_smooth = zeros(params.nx,params.ny,2);
+    
     %% compute BETA field
     % the beta field is the "normal" derivative of the velocity field. so its
     % actually d/dn of each component of u. The n-direction is indicated by the
     % normal vectors, defined as the gradient of phi.  
-    
-    switch iActive.us
-        case 'upwind'
-            [ux_x,ux_y,uy_x,uy_y] = upwind_differences(u);
-        case 'central'
-            % central differences approximation (much faster)
-            ux_x = params.D1x*u(:,:,1) ;
-            ux_y = u(:,:,1)*params.D1y' ;
-            uy_x = params.D1x*u(:,:,2) ;
-            uy_y = u(:,:,2)*params.D1y' ;
-        case 'spectral'
-            ux_x = cofitxy(1i*params.Kx.*fft2(u(:,:,1)));
-            ux_y = cofitxy(1i*params.Ky.*fft2(u(:,:,1)));
-            uy_x = cofitxy(1i*params.Kx.*fft2(u(:,:,2)));
-            uy_y = cofitxy(1i*params.Ky.*fft2(u(:,:,2)));
-        otherwise
-            error('CreateSmoothUs: type unkonwn, suicide');
-    end
-    
-    % actual beta field
-    beta(:,:,1) = (params.n_x.*ux_x + params.n_y.*ux_y) .* (1-params.mask);
-    beta(:,:,2) = (params.n_x.*uy_x + params.n_y.*uy_y) .* (1-params.mask);
+    beta = compute_beta ( u );
 
 
     %% prolongate solving advection eqn
@@ -35,7 +16,7 @@ function smooth_extension_chantalat ( u, iActive )
     % vector field as velocity. The diffusion helps regularizing. Note: the
     % velocity field -n is *not* at all divergence-free. The could be reflected
     % in the adv-diff eqn (see wikipedia)
-    CFL = iActive.CFL;
+    CFL = 0.98;
     dx = params.dx;
     umax = 1.0;
     dt = CFL * dx / umax;
@@ -43,14 +24,11 @@ function smooth_extension_chantalat ( u, iActive )
     nt = round(Tend/dt);
 
     for i=1:nt
-        switch iActive.us
+        switch active_chantalat_stepper
             case 'upwind'
                 beta(:,:,1) = EE1(beta(:,:,1),dt,@RHS_advection_upwind);
                 beta(:,:,2) = EE1(beta(:,:,2),dt,@RHS_advection_upwind);
             case 'central'
-                beta(:,:,1) = RK4(beta(:,:,1),dt,@RHS_advection_central);
-                beta(:,:,2) = RK4(beta(:,:,2),dt,@RHS_advection_central);
-            case 'spectral'
                 beta(:,:,1) = RK4(beta(:,:,1),dt,@RHS_advection_central);
                 beta(:,:,2) = RK4(beta(:,:,2),dt,@RHS_advection_central);
         end
@@ -62,44 +40,11 @@ function smooth_extension_chantalat ( u, iActive )
     end
     
     %% construct actual us field prolongation    
-    params.us(:,:,1) = params.mask .* ( params.phi.*beta(:,:,1) );
-    params.us(:,:,2) = params.mask .* ( params.phi.*beta(:,:,2) ); 
+    u_smooth(:,:,1) = params.mask .* ( params.phi.*beta(:,:,1) );
+    u_smooth(:,:,2) = params.mask .* ( params.phi.*beta(:,:,2) ); 
 end
 
 
-function  [ux_x,ux_y,uy_x,uy_y] = upwind_differences(u)
-% chantalat uses upwind differences to compute the normal derivative field,
-% we shall try to do so as well.
-global params
-    dx = params.dx;
-    dy = params.dy;
-    
-    ux_x = zeros(params.nx,params.ny);
-    ux_y = zeros(params.nx,params.ny);
-    uy_x = zeros(params.nx,params.ny);
-    uy_y = zeros(params.nx,params.ny);
-    
-    for ix=2:params.nx-1
-        for iy=2:params.ny-1
-            % derivative in x-direction
-            if (params.phi(ix+1,iy)<params.phi(ix-1,iy))
-                ux_x(ix,iy) = (u(ix+1,iy,1)-u(ix,iy,1)) / dx;
-                uy_x(ix,iy) = (u(ix+1,iy,2)-u(ix,iy,2)) / dx;
-            else
-                ux_x(ix,iy) = (u(ix,iy,1)-u(ix-1,iy,1)) / dx;
-                uy_x(ix,iy) = (u(ix,iy,2)-u(ix-1,iy,2)) / dx;
-            end
-            % derivative in y-direction
-            if (params.phi(ix,iy+1)<params.phi(ix,iy-1))
-                ux_y(ix,iy) = (u(ix,iy+1,1)-u(ix,iy,1)) / dy;
-                uy_y(ix,iy) = (u(ix,iy+1,2)-u(ix,iy,2)) / dy;
-            else
-                ux_y(ix,iy) = (u(ix,iy,1)-u(ix,iy-1,1)) / dy;
-                uy_y(ix,iy) = (u(ix,iy,2)-u(ix,iy-1,2)) / dy;
-            end
-        end
-    end
-end
 
 
 

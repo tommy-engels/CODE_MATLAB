@@ -1,7 +1,7 @@
 function main
     clear all
-    close all    
-    [e] = simulation ( 2e-5, 128, @RK2_SPLIT, 0.3 );
+%     close all    
+    [e] = simulation ( 2e-5, 128, @EE1_adjoint_pressure, 0.3 );
 end
 
 function [e1] = simulation ( eps, nx, method, CFL )
@@ -9,10 +9,11 @@ global params
 NAME = 'all.mat';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+restoredefaultpath;
 addpath(genpath('./lib_spectral_matlab/'))
 addpath(genpath('./lib_active/'))
 addpath(genpath('./lib_finite_differences_matlab/'))
-addpath(genpath('./case_lamballais/'))
+addpath(genpath('./case_vortex_pair/'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % some parameters are set here
@@ -20,12 +21,21 @@ params.nx  = 1.5*nx;
 params.ny  = nx;
 params.eta = eps;
 params.CFL = CFL;
-params.dt_smaller_eps='no';
+params.dt_smaller_eps='yes';
 params.projection='everywhere';
 params.counter=1;
 params.iplot=100;
 
-% load general parameters
+
+% active penalization (only with RK2_dave currently)
+params.active='passive'; % 'chantalat', 'dave'
+% how to compute the beta field?
+params.active_beta='central';% 'upwind', 'spectral'
+% time stepper for chantalat's advection-diffusion eqn
+params.active_chantalat_stepper='central';
+
+
+% load general parameters (CASE - specific)
 parameters();
 % allocate memory
 allocate_mem();
@@ -41,7 +51,7 @@ pk = poisson( divergence_2d( nonlinear(uk,u,'yes')) );
 
 tic
 while ( time < params.T_end )
-   % deterimne time step 
+   % determine time step 
    if strcmp(params.dt_smaller_eps,'yes')
        dt = min([ dt_CFL(u), dt_EPS(params.eta), dt_TIME(time,params.T_end) ]);
    else
@@ -76,12 +86,6 @@ end
 vor = cofitxy(vorticity_2d(uk));
 e1 = error_ref(vor, u)
 
-% figure
-% clf
-% pcolor( X,Y,vor1 );
-% shading interp; colorbar;
-% farge_color;
-% title('explicit');
 
 % otherwise you cannot access data
 save(NAME)

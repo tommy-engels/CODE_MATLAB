@@ -1,4 +1,4 @@
-function smooth_extension_dave(time, u)
+function u_smooth = smooth_extension_dave( u )
 %% create prolongation velocity field, optimized for matlab computation
     function h=h(x)
         if x<1
@@ -9,27 +9,14 @@ function smooth_extension_dave(time, u)
     end
 
     global params
-    params.us = zeros(params.nx,params.ny,2);
+    u_smooth = zeros(params.nx,params.ny,2);
     
     % delta is boundary layer thickness
     delta = (params.R3-params.R2) /2;
     
-    %% compute field of normal derivatives
-    ux_x = params.D1x*u(:,:,1) ;
-    ux_y = u(:,:,1)*params.D1y' ;
-    uy_x = params.D1x*u(:,:,2) ;
-    uy_y = u(:,:,2)*params.D1y' ;
+    % compute field of normal derivatives
+    beta = compute_beta( u );
     
-%     ux_x = cofitxy(1i*params.Kx.*fft2(u(:,:,1)));
-%     ux_y = cofitxy(1i*params.Ky.*fft2(u(:,:,1)));
-%     uy_x = cofitxy(1i*params.Kx.*fft2(u(:,:,2)));
-%     uy_y = cofitxy(1i*params.Ky.*fft2(u(:,:,2)));
-    
-%     [ux_x,ux_y,uy_x,uy_y] = upwind_differences(u);
-    
-    % actual beta field (normal derivatives, component-wise)
-    beta(:,:,1) = (params.n_x.*ux_x + params.n_y.*ux_y);
-    beta(:,:,2) = (params.n_x.*uy_x + params.n_y.*uy_y);
     
     % count points in layers
     npoints=1;
@@ -64,17 +51,17 @@ function smooth_extension_dave(time, u)
     end
     
     % interpolate all points at once
-    [X,Y]=meshgrid(params.x,params.y);
+    [X,Y]  = meshgrid(params.x,params.y);
     u_ex_x = interp2(X,Y,params.u_ex(:,:,1)',xi_x,xi_y);
     u_ex_y = interp2(X,Y,params.u_ex(:,:,2)',xi_x,xi_y);
-    u_n_x = interp2(X,Y,beta(:,:,1)',xi_x,xi_y);
-    u_n_y = interp2(X,Y,beta(:,:,2)',xi_x,xi_y);
+    u_n_x  = interp2(X,Y,beta(:,:,1)',xi_x,xi_y);
+    u_n_y  = interp2(X,Y,beta(:,:,2)',xi_x,xi_y);
     
     
     % loop over points in layers
     for ik=1:npoints
-        ix =iix(ik);
-        iy= iiy(ik);
+        ix = iix(ik);
+        iy = iiy(ik);
         % we are in the extension layers        
         s  = -params.phi(ix,iy) / delta; % s is positive
         
@@ -87,8 +74,8 @@ function smooth_extension_dave(time, u)
         b0 = 3*s^4 - 4*s^3 +1;
         b1 = s^3 -2*s^2 + s;
         
-        params.us(ix,iy,1) = u_ex_x(ik)*b0 - delta*b1*u_n_x(ik);
-        params.us(ix,iy,2) = u_ex_y(ik)*b0 - delta*b1*u_n_y(ik);
+        u_smooth(ix,iy,1) = u_ex_x(ik)*b0 - delta*b1*u_n_x(ik);
+        u_smooth(ix,iy,2) = u_ex_y(ik)*b0 - delta*b1*u_n_y(ik);
     end
   
     

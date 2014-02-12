@@ -6,12 +6,13 @@ function [u_new, uk_new, pk] = RK2_classic(u,uk,pk,dt)
 % pressure is div(nlk) 
 % pk (in/out) is a dummy argument
 %--------------------------------------------------------------------------
-    global params
-    
+    global params    
     if strcmp(params.dt_smaller_eps,'no') && (dt > params.eta)
         warning('RK2_classic: time step restriction violated, result may be unstable');
+    end    
+    if ~(strcmp(params.active,'passive'))
+        error('RK2_classic cannot handle active penalization');
     end
-    
     
     pk = pk*0; % dummy argument
     
