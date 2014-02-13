@@ -7,7 +7,7 @@ function d=D2(N,h)
     oben =ones(1,N-1);
     unten=ones(1,N-1);
     
-    d=spdiags(mitte)+spdiags(oben,1)+spdiags(unten,-1);
+    d=diag(mitte)+diag(oben,1)+diag(unten,-1);
     
     d(1,1)=2;
     d(1,2)=-5;
@@ -19,5 +19,5 @@ function d=D2(N,h)
     d(N,N-1)=-5;
     d(N,N)=2;
     
-    d= d / (h^2);
+    d= sparse(d) / (h^2);
 end 

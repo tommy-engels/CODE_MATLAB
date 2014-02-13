@@ -3,12 +3,12 @@ function [u_new, uk_new, pk] = RK2_dave(u,uk,pk,dt)
     global params
     pk = pk*0; % dummy argument
     
-    % compute non-linear terms
+    % compute non-linear terms + modified pressure
     nlk = nonlinear (uk, u, 'no');
     divu = cofitxy(divergence_2d(uk));
     qk = fft2( ((1-params.mask)/params.eta).*divu ) + divergence_2d(nlk);
     qk = poisson(qk);
-    % active penalization?
+    % add penalization term, possibly with active penalization
     params.us = create_us( u );
     penal(:,:,1) = fft2((params.mask/params.eta).*(u(:,:,1)-params.us(:,:,1)));
     penal(:,:,2) = fft2((params.mask/params.eta).*(u(:,:,2)-params.us(:,:,2)));
@@ -26,7 +26,7 @@ function [u_new, uk_new, pk] = RK2_dave(u,uk,pk,dt)
     divu = cofitxy(divergence_2d(uk_new));
     qk = fft2( ((1-params.mask)/params.eta).*divu ) + divergence_2d(nlk2);
     qk = poisson(qk);
-    % active penalization?
+    % add penalization term, possibly with active penalization
     params.us = create_us( u );
     penal(:,:,1) = fft2((params.mask/params.eta).*(u_new(:,:,1)-params.us(:,:,1)));
     penal(:,:,2) = fft2((params.mask/params.eta).*(u_new(:,:,2)-params.us(:,:,2)));

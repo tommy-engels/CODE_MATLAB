@@ -5,6 +5,8 @@ function load_lamballais_us()
     y0 = 0.5*params.Ly;
     us = zeros(params.nx,params.ny,2);
     R  = sqrt( (params.X-x0).^2 + (params.Y-y0).^2); 
+    
+    
     %% load data from file or generate it
     file = ['./case_lamballais/us_lamballais_long_' num2str(params.nx) '.mat'];
     if (exist(file)~=2)
@@ -15,15 +17,7 @@ function load_lamballais_us()
                 % fetch data from lamballais paper
                 x = params.X(ix,iy) - 0.5*params.Lx;
                 y = params.Y(ix,iy) - 0.5*params.Ly;
-                %--------------45 deg---------------------
-%                 M = [cos(deg2rad(45)) -sin(deg2rad(45)); sin(deg2rad(45)) cos(deg2rad(45)) ];
-%                 xs = M*[x;y];              
-%                 [uu,vv,pp,vvor]=lamballais(xs(1),xs(2));
-%                 u = [uu;vv];
-%                 uus = M'*u;
-%                 us(ix,iy,1) = uus(1);
-%                 us(ix,iy,2) = uus(2);
-                %-----------------------------------------                
+                
                 [uu,vv,pp,vvor]=lamballais(x,y);
                 us(ix,iy,1) = uu;
                 us(ix,iy,2) = vv;            
@@ -34,7 +28,8 @@ function load_lamballais_us()
         save(file,'us')
     end
     load (file)
-    params.us = us;
+    
+    
     params.u_ex = us;
     
     %% kill us field in cylinder

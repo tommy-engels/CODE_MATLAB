@@ -9,7 +9,7 @@ global params
 NAME = 'all.mat';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-restoredefaultpath;
+% restoredefaultpath;
 addpath(genpath('./lib_spectral_matlab/'))
 addpath(genpath('./lib_active/'))
 addpath(genpath('./lib_finite_differences_matlab/'))
@@ -22,13 +22,12 @@ params.ny  = nx;
 params.eta = eps;
 params.CFL = CFL;
 params.dt_smaller_eps='yes';
-params.projection='everywhere';
 params.counter=1;
 params.iplot=100;
 params.sponge='no';
 
 % active penalization (only with RK2_dave currently)
-params.active='dave'; % 'chantalat', 'dave', 'passive'
+params.active='chantalat'; % 'chantalat', 'dave', 'passive'
 % how to compute the beta field?
 params.active_beta='central';% 'upwind', 'spectral'
 % time stepper for chantalat's advection-diffusion eqn
@@ -65,6 +64,7 @@ while ( time < params.T_end )
    % iterate..
    time = time + dt;
    it = it+1;
+   
    % progress
    if (mod(it,500)==0)
        time_left = (params.T_end - time) * toc/time;
@@ -84,7 +84,8 @@ while ( time < params.T_end )
    end   
 end 
 vor = cofitxy(vorticity_2d(uk));
-e1 = error_ref(vor, u)
+e1 = error_ref(vor, u);
+fprintf('error= %e\n',e1)
 
 
 % otherwise you cannot access data

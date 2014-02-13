@@ -6,15 +6,15 @@ function [n_x, n_y] = compute_normals( phi )
     phi_dy = cofdy_fd ( phi, D1(params.ny,params.dy) );
     
     % normalization
-    normgrad = sqrt( phi_dx(:,:).^2 + phi_dy(:,:).^2  );
+    normgrad = sqrt( phi_dx.^2 + phi_dy.^2  );
     normgrad ( abs(normgrad) < 1e-10 ) = 1.0;
     
     % these are the normal vectors:
-    n_x = phi_dx(:,:) ./ normgrad;
-    n_y = phi_dy(:,:) ./ normgrad;        
+    n_x = phi_dx ./ normgrad;
+    n_y = phi_dy ./ normgrad;        
     
     
-    %% when using chantalat: reduce normals to a boundary layer
+    %% when using chantalat's prolongation: reduce normals to a boundary layer
     % compute boundary-layer-blending function (only when doing
     % chantalat-type prolongation)
     if strcmp(params.CASE,'chantalat')

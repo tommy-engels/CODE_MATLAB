@@ -4,12 +4,12 @@ function [u_new, uk_new, pk_new] = RK2_SPLIT(u,uk,pk,dt)
     global params
     chi = params.mask;
     eps = params.eta; 
-    us  = params.us;
       
     %----------------------------------------------------------------------
     % 1st strang step, half a time step for penalization term
     %----------------------------------------------------------------------
     dt1 = 0.5*dt; a = dt1/eps;    
+    us = create_us( u );
     u_new (:,:,1) = (u(:,:,1)-chi.*us(:,:,1)).*exp(-chi*a) + chi.*us(:,:,1);
     u_new (:,:,2) = (u(:,:,2)-chi.*us(:,:,2)).*exp(-chi*a) + chi.*us(:,:,2);    
     uk_new = dealias_2d ( coftxy_2d ( u_new ) );
@@ -41,6 +41,7 @@ function [u_new, uk_new, pk_new] = RK2_SPLIT(u,uk,pk,dt)
     %----------------------------------------------------------------------
     dt1 = 0.5*dt; a = dt1/eps;
     u_new = cofitxy_2d( uk_new );    
+    us = create_us( u_new );
     u_new (:,:,1) = (u_new(:,:,1)-chi.*us(:,:,1)).*exp(-chi*a) + chi.*us(:,:,1);
     u_new (:,:,2) = (u_new(:,:,2)-chi.*us(:,:,2)).*exp(-chi*a) + chi.*us(:,:,2);
     uk_new = dealias_2d ( coftxy_2d ( u_new ) );

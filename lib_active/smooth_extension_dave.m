@@ -73,7 +73,7 @@ function u_smooth = smooth_extension_dave( u )
 %         b0 = 2*s^3 -3*s^2 + 1;
         b0 = 3*s^4 - 4*s^3 +1;
         b1 = s^3 -2*s^2 + s;
-        
+        b0=0;
         u_smooth(ix,iy,1) = u_ex_x(ik)*b0 - delta*b1*u_n_x(ik);
         u_smooth(ix,iy,2) = u_ex_y(ik)*b0 - delta*b1*u_n_y(ik);
     end
@@ -105,41 +105,4 @@ function u_smooth = smooth_extension_dave( u )
 % % %     hold on   
 % % %     quiver(params.X,params.Y,params.u_ex(:,:,1), params.u_ex(:,:,2),'color',[0 1 0])
     
-end
-
-
-
-
-function  [ux_x,ux_y,uy_x,uy_y] = upwind_differences(u)
-% chantalat uses upwind differences to compute the normal derivative field,
-% we shall try to do so as well.
-global params
-    dx = params.dx;
-    dy = params.dy;
-    
-    ux_x = zeros(params.nx,params.ny);
-    ux_y = zeros(params.nx,params.ny);
-    uy_x = zeros(params.nx,params.ny);
-    uy_y = zeros(params.nx,params.ny);
-    
-    for ix=2:params.nx-1
-        for iy=2:params.ny-1
-            % derivative in x-direction
-            if (params.phi(ix+1,iy)<params.phi(ix-1,iy))
-                ux_x(ix,iy) = (u(ix+1,iy,1)-u(ix,iy,1)) / dx;
-                uy_x(ix,iy) = (u(ix+1,iy,2)-u(ix,iy,2)) / dx;
-            else
-                ux_x(ix,iy) = (u(ix,iy,1)-u(ix-1,iy,1)) / dx;
-                uy_x(ix,iy) = (u(ix,iy,2)-u(ix-1,iy,2)) / dx;
-            end
-            % derivative in y-direction
-            if (params.phi(ix,iy+1)<params.phi(ix,iy-1))
-                ux_y(ix,iy) = (u(ix,iy+1,1)-u(ix,iy,1)) / dy;
-                uy_y(ix,iy) = (u(ix,iy+1,2)-u(ix,iy,2)) / dy;
-            else
-                ux_y(ix,iy) = (u(ix,iy,1)-u(ix,iy-1,1)) / dy;
-                uy_y(ix,iy) = (u(ix,iy,2)-u(ix,iy-1,2)) / dy;
-            end
-        end
-    end
 end

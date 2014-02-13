@@ -8,6 +8,8 @@ function u_smooth = smooth_extension_chantalat ( u )
     % normal vectors, defined as the gradient of phi.  
     beta = compute_beta ( u );
 
+    beta(:,:,1) = beta(:,:,1).*(1-params.mask);
+    beta(:,:,2) = beta(:,:,2).*(1-params.mask);
 
     %% prolongate solving advection eqn
     % here we solve an advection diffusion equation numerically, in order to
@@ -20,11 +22,12 @@ function u_smooth = smooth_extension_chantalat ( u )
     dx = params.dx;
     umax = 1.0;
     dt = CFL * dx / umax;
-    Tend = 0.10;
+    delta = 0.05;
+    Tend = delta / umax;
     nt = round(Tend/dt);
 
     for i=1:nt
-        switch active_chantalat_stepper
+        switch params.active_chantalat_stepper
             case 'upwind'
                 beta(:,:,1) = EE1(beta(:,:,1),dt,@RHS_advection_upwind);
                 beta(:,:,2) = EE1(beta(:,:,2),dt,@RHS_advection_upwind);
@@ -95,7 +98,7 @@ function rhs=RHS_advection_central ( field, dt )
 % normal vectors (times -1) n_x and n_y
     global params
     lambda = 0.5*0.5*dt; % old value: 0.5*0.5*dt
-    laplace = Laplacian(field);    
+    laplace = cofdx_fd(field,D2(params.nx,params.dx)) + cofdy_fd(field,D2(params.ny,params.dy));
 
 
     % tried to include non-solenoidal velocity field
@@ -104,7 +107,8 @@ function rhs=RHS_advection_central ( field, dt )
 %     rhs = params.mask2.*( grad_x + grad_y + lambda*laplace ); 
 
     % ignore the fact that the velocity field is not divergence-free
-    [grad_x, grad_y] = MyGradient( field );
+    grad_x = cofdx_fd(field,D1(params.nx,params.dx));
+    grad_y = cofdy_fd(field,D1(params.ny,params.dy));
     rhs = params.mask.*( params.n_x.*grad_x + params.n_y.*grad_y + lambda*laplace ); 
 end
 

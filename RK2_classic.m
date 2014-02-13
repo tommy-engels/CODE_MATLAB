@@ -17,6 +17,7 @@ function [u_new, uk_new, pk] = RK2_classic(u,uk,pk,dt)
     pk = pk*0; % dummy argument
     
     % compute non-linear terms
+    params.us = create_us( u );
     nlk = nonlinear (uk,u,'yes');
     nlk = add_pressure (nlk);
     
@@ -27,6 +28,7 @@ function [u_new, uk_new, pk] = RK2_classic(u,uk,pk,dt)
     u_new = cofitxy_2d(uk_new);
         
     % end of euler step 
+    params.us = create_us( u );
     nlk2 = nonlinear(uk_new, u_new, 'yes');
     nlk2 = add_pressure (nlk2);
     

@@ -48,20 +48,12 @@ function create_mask
     end
 
     %% compute normals
-    [params.nx, params.ny] = compute_normals( params.phi );
+    [params.n_x, params.n_y] = compute_normals( params.phi );
 
    
     %% construct u_BC used to enforce non-homogeneous boundary conditions
-    if strcmp(params.CASE,'chantalat')
-        params.u_BC = params.us;
-        kill = ones(size(params.mask));
-        kill(R<=1.25*params.R1) = 0;
-        params.u_BC(:,:,1) = params.u_BC(:,:,1) .* kill;
-        params.u_BC(:,:,2) = params.u_BC(:,:,2) .* kill;
-    else
-        kill = ones(size(params.mask));
-        kill(R<=1.25*params.R1) = 0;
-        params.u_BC(:,:,1) = params.u_ex(:,:,1) .* kill;
-        params.u_BC(:,:,2) = params.u_ex(:,:,2) .* kill;
-    end
+    kill = ones(size(params.mask));
+    kill(R<=1.25*params.R1) = 0;
+    params.u_BC(:,:,1) = params.u_ex(:,:,1) .* kill;
+    params.u_BC(:,:,2) = params.u_ex(:,:,2) .* kill;
 end
