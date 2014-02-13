@@ -25,7 +25,7 @@ params.dt_smaller_eps='yes';
 params.projection='everywhere';
 params.counter=1;
 params.iplot=100;
-
+params.sponge='no';
 
 % active penalization (only with RK2_dave currently)
 params.active='dave'; % 'chantalat', 'dave', 'passive'
