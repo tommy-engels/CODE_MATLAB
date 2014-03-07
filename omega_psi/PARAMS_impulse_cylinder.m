@@ -21,7 +21,7 @@ params.inicond = 'impulsively_x';
 params.error = 'none';
 
 % time parameters
-params.T_end = 0.5;
+params.T_end = 2;
 params.CFL = 0.1;
 params.iplot = 100;
 params.iprogress = 500;

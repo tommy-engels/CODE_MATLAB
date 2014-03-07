@@ -16,7 +16,9 @@ function [vork_new,dt] = rk2_iter(time, vork)
     %% iteration
     % fetch velocity
     uk = vor2u(vork_new);
+    uk = mean_flow_forcing( uk );
     uf = cofitxy_2d(uk);
+    
     % now u is the velocity field after a full time step EE1 w/o
     % penalization
     
@@ -37,7 +39,7 @@ function [vork_new,dt] = rk2_iter(time, vork)
     
 %     while (abs(err) > 5.0e-4) && (it<1000)
 %     while ( delta > 1.5) && (it<1000) 
-    for it=1:2
+    for it=1:10
 
 
        uu(:,:,1) = fft2(params.mask.*(v0(:,:,1) - u_gamma(:,:,1)));
@@ -47,6 +49,7 @@ function [vork_new,dt] = rk2_iter(time, vork)
 
        
        u_gamma = vor2u ( gamma );
+%        u_gamma = mean_flow_forcing( u_gamma );
        u_gamma  = cofitxy_2d( u_gamma );
        
        err_new = dxdy*sum(sum( ...
@@ -56,7 +59,7 @@ function [vork_new,dt] = rk2_iter(time, vork)
        delta = (err_old/err_new);
 %        fprintf('new=%e old=%e r=%e\n',err_new,err_old,delta)
        err_old=err_new;
-%        it=it+1;
+       it=it+1;
     end
 %     fprintf('---%i\n',it)
     fprintf('time=%e dt=%e iters=%i terminerr=%e\n',time, dt,it,err_old)

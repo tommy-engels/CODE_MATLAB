@@ -1,5 +1,6 @@
 function e = error_ref(time, u, vor)
 global params
+e = 0;
 
 switch params.error
     case 'guermond'
@@ -25,4 +26,5 @@ switch params.error
         figure
         plot (params.x, u(:,5+end/2,1), params.x, u_ex(:,5+end/2,1))
 end
+
 end

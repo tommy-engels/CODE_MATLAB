@@ -18,7 +18,7 @@ function time_step
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %    if (time < 0.20)
                [vork_new, params.dt] = rk2(time,vork_old);
-        %    else
+%         %    else
 %         [vork_new, params.dt] = rk2_iter(time,vork_old);
         %    end
         vork_old = vork_new;
