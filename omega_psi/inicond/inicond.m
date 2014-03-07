@@ -6,6 +6,10 @@ function vork = inicond()
         case 'quiescent'
             vor = zeros(params.nx,params.ny);
             vork = fft2(vor);
+         
+        case 'impulsively_x'
+            vor = zeros(params.nx,params.ny);
+            vork = fft2(vor);
             
         case 'dipole'
             % dipole wall initial condition

@@ -1,7 +1,7 @@
 function time_step
     global params
     %%%%%%%%%%%%%%%%%%%%
-    PARAMS_guermond()
+    PARAMS_impulse_cylinder()
     %%%%%%%%%%%%%%%%%%%%
     
     % initial condition

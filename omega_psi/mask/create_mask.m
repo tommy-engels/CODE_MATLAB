@@ -20,6 +20,10 @@ function create_mask
         case 'empty'
             params.mask = zeros( params.nx,params.ny );
             
+        case 'cylinder'
+            R = sqrt( (params.X-0.5*params.Lx).^2 + (params.Y-0.5*params.Ly).^2 );
+            params.mask ( R<=1.0 ) = 1.0;
+            
         otherwise
             error('params.imask not set')
     end
