@@ -4,13 +4,14 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
     uk = vor2u(vork);
     u = cofitxy_2d(uk);
         
-    % deterimne time step 
+    %% deterimne time step 
     if strcmp(params.dt_fixed,'yes')
         dt = min(params.CFL*params.dx/max(max(max(abs(u)))), params.eta);
     else
         dt = params.dt;
     end
     
+    %% nonlinear term and penalization
     if strcmp(penalization,'yes')
         % note this is the curl
         penalk(:,:,1) = +1i*params.Kx.*fft2( (params.mask/params.eta).*(u(:,:,2)-params.us(:,:,2)) );
@@ -32,5 +33,6 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
         nlk = nlk + fft2( (1-params.mask).*F );
     end
     
+    %% dealiasing 
     nlk = dealias( nlk );
 end
