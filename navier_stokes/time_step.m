@@ -1,43 +1,20 @@
-function main
-    clear all
-%     close all    
-    [e] = simulation ( 1e-3, 128, @RK2_dave, 0.3 );
-end
-
-function [e1] = simulation ( eps, nx, method, CFL )
+function [e1] = time_step ( eps, nx, method, CFL )
 global params
 NAME = 'all.mat';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % restoredefaultpath;
-addpath(genpath('./lib_spectral_matlab/'))
-addpath(genpath('./lib_active/'))
-addpath(genpath('./lib_finite_differences_matlab/'))
-addpath(genpath('./case_lamballais/'))
+addpath(genpath('../common_spectral/'))
+addpath(genpath('../common_active/'))
+addpath(genpath('../common_misc/'))
+addpath(genpath('../common_finite_differences/'))
+addpath(genpath('./mask/'))
+addpath(genpath('./inicond/'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% some parameters are set here
-params.nx  = 1.5*nx;
-params.ny  = nx;
-params.eta = eps;
-params.CFL = CFL;
-params.dt_smaller_eps='yes';
-params.counter=1;
-params.iplot=100;
-params.sponge='no';
 
-% active penalization (only with RK2_dave currently)
-params.active='chantalat'; % 'chantalat', 'dave', 'passive'
-% how to compute the beta field?
-params.active_beta='central';% 'upwind', 'spectral'
-% time stepper for chantalat's advection-diffusion eqn
-params.active_chantalat_stepper='central';
+PARAMS_guermond()
 
-
-% load general parameters (CASE - specific)
-parameters();
-% allocate memory
-allocate_mem();
 % create the mask + solid velocity
 create_mask();
 % initial condition
@@ -46,7 +23,8 @@ create_mask();
 
 time = 0; 
 it = 1;
-pk = poisson( divergence_2d( nonlinear(uk,u,'yes')) );
+
+pk = poisson( divergence_2d( rhs_up(time,uk,u,'yes')) );
 
 tic
 while ( time < params.T_end )
@@ -58,15 +36,14 @@ while ( time < params.T_end )
    end
    
    % scheme
-   [u,uk,pk] = method(u,uk,pk,dt);   
-   
-   
+   [u,uk,pk] = method(time,dt,u,uk,pk);   
+      
    % iterate..
    time = time + dt;
    it = it+1;
    
    % progress
-   if (mod(it,500)==0)
+   if (mod(it,params.iprogress)==0)
        time_left = (params.T_end - time) * toc/time;
        fprintf('%02i%% %s - %s %s nx=%i eps=%2.1e dt=%2.1e CFL=%f\n',round(100*time/params.T_end),...
           secs2hms(time_left),secs2hms(toc),...

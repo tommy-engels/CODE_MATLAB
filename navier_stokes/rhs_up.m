@@ -1,4 +1,4 @@
-function [nlk] = nonlinear (uk, u, penal, diffusion)
+function [nlk] = rhs_up (time, uk, u, penal, diffusion)
     %% [nlk] = nonlinear (uk, u, penal, diffusion)
     % computes the non-linear terms + penalization in Fourier space.    
     % ---------------------------------------------------------------------
@@ -16,14 +16,14 @@ function [nlk] = nonlinear (uk, u, penal, diffusion)
     
     % optional parameters:
     switch nargin
-        case 2
+        case 3
             penal='yes';
             diffusion='no';
-        case 3
+        case 4
             diffusion='no';
-        otherwise
-            error('nonlinear: not enough input arguments')
     end
+    
+    nlk = zeros(params.nx,params.ny,2);
     
     vor = cofitxy( vorticity_2d(uk) );
     
@@ -48,6 +48,38 @@ function [nlk] = nonlinear (uk, u, penal, diffusion)
         vor = vor.*params.masksponge;
         vortk = fft2(vor);
         nlk = nlk - vor2u(vortk);
+    end
+    
+    %% forcing (guermond's testcase)
+    if strcmp(params.forcing,'guermond')
+       X=params.X;
+       Y=params.Y;
+        
+       cost=cos(time);
+       sint=sin(time);
+       
+       Qx = 2*(pi^3)*(sin(time)^2)*cos(pi*X).*(sin(pi*X).^3).*(sin(2*pi*Y).^2)...
+             -2*(pi^3)*(sin(time)^2)*(sin(pi*X).^2).*sin(2*pi*X).*(sin(pi*Y).^2).*cos(2*pi*Y);
+       Qy = 2*(pi^3)*(sin(time).^2).*(sin(2*pi*X).^2).*cos(pi*Y).*(sin(pi*Y).^3)...
+           -2*(pi^3)*(sin(time).^2).*(sin(pi*X).^2).*cos(2*pi*X).*(sin(pi*Y).^2).*sin(2*pi*Y); 
+      
+       utx = pi*cost*sin(2*pi*Y).*(sin(pi*X).^2);
+       uty = pi*cost*(-sin(2*pi*X)).*(sin(pi*Y).^2);
+       
+       laplx = pi*sint*   (+2*(pi^2)*(2*cos(2*pi*X)-1).*sin(2*pi*Y));
+       laply = pi*sint*   (-2*(pi^2)*sin(2*pi*X).*(2*cos(2*pi*Y)-1));
+       
+       px = sint*  (-pi*sin(pi*X).*sin(pi*Y));
+       py = sint*  ( pi*cos(pi*X).*cos(pi*Y));
+              
+       fx =  utx + px - laplx + Qx; 
+       fy =  uty + py - laply + Qy;
+       
+       fxk = dealias( fft2( fx.*(1-params.mask) ) );
+       fyk = dealias( fft2( fy.*(1-params.mask) ) );
+       
+       nlk(:,:,1) = nlk(:,:,1) + fxk;
+       nlk(:,:,2) = nlk(:,:,2) + fyk;
     end
     
     nlk = dealias_2d ( nlk );
