@@ -38,8 +38,8 @@ function [vork_new,dt] = rk2_iter(time, vork)
     delta = Inf;
     
 %     while (abs(err) > 5.0e-4) && (it<1000)
-    while ( delta > 1.01) && (it<1000) 
-%     for it=1:50
+%     while ( delta > 1.0001) && (it<1000) 
+    for it=1:20
 
 
        uu(:,:,1) = fft2(params.mask.*(v0(:,:,1) - u_gamma(:,:,1)));
@@ -49,7 +49,6 @@ function [vork_new,dt] = rk2_iter(time, vork)
 
        
        u_gamma = vor2u ( gamma );
-%        u_gamma = mean_flow_forcing( u_gamma );
        u_gamma  = cofitxy_2d( u_gamma );
        
        err_new = dxdy*sum(sum( ...

@@ -18,10 +18,10 @@ params.nu = 1/25;
 params.inicond = 'impulsively_x';
 
 % error computation
-params.error = 'none';
+params.error = 'cylinder';
 
 % time parameters
-params.T_end = 0.2;
+params.T_end = 0.01;
 params.CFL = 0.1;
 params.iplot = 100;
 params.iprogress = 500;
@@ -34,7 +34,7 @@ params.dt = 1e-4;
 params.ipenalization = 'yes';
 params.imoving = 'no';
 params.imask = 'cylinder';
-params.eta = 1e-3;
+params.eta = 1e-4;
 params.active = 'passive';
 
 

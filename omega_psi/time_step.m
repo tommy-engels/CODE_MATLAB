@@ -53,8 +53,11 @@ function time_step
         end
     end
     
-    % e = error_ref( cofitxy(vork_new), vor2u(cofitxy(vork_new)) )
-    e = error_ref( time, cofitxy_2d(vor2u(vork)), 0 )
+    uk = vor2u(vork);
+    uk = mean_flow_forcing(uk);
+    u = cofitxy_2d(uk);
+    vor = cofitxy(vork);
+    e = error_ref( time, u, vor );
     
     save all.mat
 end

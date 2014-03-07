@@ -7,7 +7,7 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
     
         
     %% determine time step 
-    if strcmp(params.dt_fixed,'yes')
+    if strcmp(params.dt_fixed,'no')
         dt = min(params.CFL*params.dx/max(max(max(abs(u)))), params.eta);
     else
         dt = params.dt;
