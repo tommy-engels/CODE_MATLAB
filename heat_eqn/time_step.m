@@ -9,8 +9,10 @@ function [err,u_new]=time_step(eps,method,dt_fixed,nx)
     end
         
 
-    addpath(genpath('./lib_spectral_matlab/'))
-    addpath(genpath('./lib_finite_differences_matlab/'))
+    addpath(genpath('../common_spectral/'))
+    addpath(genpath('../common_active/'))
+    addpath(genpath('../common_misc/'))
+    addpath(genpath('../common_finite_differences/'))
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     global params
     dx = 2*pi / (nx-1);
