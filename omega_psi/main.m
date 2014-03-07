@@ -1,5 +1,5 @@
 function main
-close all
+% close all
 clear all
 clc
 global params

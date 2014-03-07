@@ -6,6 +6,8 @@ function time_step
 %     PARAMS_guermond_periodic()
     %%%%%%%%%%%%%%%%%%%%
     
+    method = @rk2_iter;
+    
     % initial condition
     vork = inicond();
     
@@ -17,14 +19,7 @@ function time_step
     figure
     
     while (time<params.T_end)
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %    if (time < 0.20)
-               [vork, params.dt] = rk2(time,vork);
-%         %    else
-%         [vork, params.dt] = rk2_iter(time,vork);
-        %    end
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        [vork, params.dt] = method(time,vork);
         
         time = time + params.dt;
         it = it+1;
@@ -45,10 +40,15 @@ function time_step
             colorbar
             shading interp
             hold on
-            quiver(params.X,params.Y,u(:,:,1),u(:,:,2))
+%             quiver(params.X,params.Y,u(:,:,1),u(:,:,2))
             title(['Vorticity time=' num2str(time) ' dt=' num2str(params.dt,'%e') ])
             hold on
             contour(params.X,params.Y,stream,20,'color','white');
+            hold on
+            if strcmp(params.imask,'cylinder')
+            phi = sqrt((params.X-0.5*params.Lx).^2 + (params.Y-0.5*params.Ly).^2) - 1.0;
+            contour(params.X,params.Y,phi,[0 1000],'color','white');
+            end
             drawnow
         end
     end

@@ -38,8 +38,8 @@ function [vork_new,dt] = rk2_iter(time, vork)
     delta = Inf;
     
 %     while (abs(err) > 5.0e-4) && (it<1000)
-%     while ( delta > 1.5) && (it<1000) 
-    for it=1:10
+    while ( delta > 1.01) && (it<1000) 
+%     for it=1:50
 
 
        uu(:,:,1) = fft2(params.mask.*(v0(:,:,1) - u_gamma(:,:,1)));

@@ -1,8 +1,8 @@
 %% Parameters for cylinder testcase
 global params
 % geometry of the domain
-params.nx = 64;
-params.ny = 64;
+params.nx = 128;
+params.ny = 128;
 params.Lx = 4.0;
 params.Ly = 4.0;
 params.x = params.Lx*(0:params.nx-1)/params.nx;
@@ -21,7 +21,7 @@ params.inicond = 'impulsively_x';
 params.error = 'none';
 
 % time parameters
-params.T_end = 2;
+params.T_end = 0.2;
 params.CFL = 0.1;
 params.iplot = 100;
 params.iprogress = 500;
