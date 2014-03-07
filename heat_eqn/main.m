@@ -1,8 +1,12 @@
 function main
     clear all
     close all
+    addpath(genpath('../common_spectral/'))
+    addpath(genpath('../common_active/'))
+    addpath(genpath('../common_misc/'))
+    addpath(genpath('../common_finite_differences/'))
     
-    [err, u]=time_step( 1e-4, @strang_spectral, 1e-3, 64 );
+    [err, u] = time_step( 1e-4, @strang_spectral, 1e-3, 64 );
     err
 end
 

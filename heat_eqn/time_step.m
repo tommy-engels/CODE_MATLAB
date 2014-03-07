@@ -8,11 +8,6 @@ function [err,u_new]=time_step(eps,method,dt_fixed,nx)
         end
     end
         
-
-    addpath(genpath('../common_spectral/'))
-    addpath(genpath('../common_active/'))
-    addpath(genpath('../common_misc/'))
-    addpath(genpath('../common_finite_differences/'))
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     global params
     dx = 2*pi / (nx-1);

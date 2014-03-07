@@ -6,6 +6,8 @@ clc
     addpath(genpath('../common_active/'))
     addpath(genpath('../common_misc/'))
     addpath(genpath('../common_finite_differences/'))
+    addpath(genpath('./mask/'))
+    addpath(genpath('./inicond/'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 global params
 params.CASE = 'guermond';
