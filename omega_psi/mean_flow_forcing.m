@@ -5,7 +5,7 @@ function uk = mean_flow_forcing( uk )
     
     switch params.meanflow
         case 'impulsively_x'
-            uk (1,1,1) = -1.0 * factor;
+            uk (1,1,1) = 1.0 * factor;
     end
        
     

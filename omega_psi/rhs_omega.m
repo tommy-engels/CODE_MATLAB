@@ -18,9 +18,9 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
         % note this is the curl
         penalk(:,:,1) = +1i*params.Kx.*fft2( (params.mask/params.eta).*(u(:,:,2)-params.us(:,:,2)) );
         penalk(:,:,2) = -1i*params.Ky.*fft2( (params.mask/params.eta).*(u(:,:,1)-params.us(:,:,1)) );        
-        nlk = fft2( +u(:,:,1).*cofitxy(1i*params.Kx.*vork) + u(:,:,2).*cofitxy(1i*params.Ky.*vork)  )  - (penalk(:,:,1) + penalk(:,:,2));
+        nlk = fft2( -u(:,:,1).*cofitxy(1i*params.Kx.*vork) - u(:,:,2).*cofitxy(1i*params.Ky.*vork)  )  - (penalk(:,:,1) + penalk(:,:,2));
     else
-        nlk = fft2( +u(:,:,1).*cofitxy(1i*params.Kx.*vork) + u(:,:,2).*cofitxy(1i*params.Ky.*vork)  );
+        nlk = fft2( -u(:,:,1).*cofitxy(1i*params.Kx.*vork) - u(:,:,2).*cofitxy(1i*params.Ky.*vork)  );
     end
     
     %% add source term that forces exact solution in guermonds paper   

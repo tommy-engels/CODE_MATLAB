@@ -1,7 +1,9 @@
 function time_step
     global params
     %%%%%%%%%%%%%%%%%%%%
-    PARAMS_impulse_cylinder()
+%     PARAMS_impulse_cylinder()
+%     PARAMS_guermond()
+    PARAMS_guermond_periodic()
     %%%%%%%%%%%%%%%%%%%%
     
     % initial condition
@@ -31,7 +33,8 @@ function time_step
             clf
             vor = cofitxy(vork_new);
             uk = vor2u(vork_new);
-            u=cofitxy_2d(uk);
+            uk = mean_flow_forcing(uk);
+            u = cofitxy_2d(uk);
             pcolor(params.X,params.Y,vor);
             colormap(PaletteMarieAll('Vorticity',600,0.3,5,0.25));
             scale = 1.0;
