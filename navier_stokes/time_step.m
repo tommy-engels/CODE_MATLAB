@@ -52,9 +52,7 @@ while ( time < params.T_end )
    end   
 end 
 vor = cofitxy(vorticity_2d(uk));
-e1 = error_ref(vor, u);
-fprintf('error= %e\n',e1)
-
+e1 = error_ref(time, u, vor);
 
 % otherwise you cannot access data
 save(NAME)
