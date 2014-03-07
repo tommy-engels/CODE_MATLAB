@@ -4,7 +4,8 @@ function [vork_new,dt] = rk2(time,vork)
     [nlk,dt] = nonlinear2(time,vork,'yes');
     % advance in time
     vis = exp(-params.nu*dt*(params.Kx.^2+params.Ky.^2) );    
-    vork_new = vis.*(vork + dt*nlk );                    
+    vork_new = vis.*(vork + dt*nlk );         
+    
     % end of euler step    
     [nlk2,dt_dummy] = nonlinear2(time+dt,vork_new,'yes');     
     % advance in time

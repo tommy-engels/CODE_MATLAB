@@ -26,7 +26,7 @@ function create_mask
     
     
     
-    if (sum(sum(params.mask))==0)
+    if (sum2(params.mask)==0)
         warning('Mask is empty..')
     end
 end
