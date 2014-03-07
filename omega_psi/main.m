@@ -2,75 +2,20 @@ function main
 close all
 clear all
 clc
-    addpath(genpath('../common_spectral/'))
-    addpath(genpath('../common_active/'))
-    addpath(genpath('../common_misc/'))
-    addpath(genpath('../common_finite_differences/'))
-    addpath(genpath('./mask/'))
-    addpath(genpath('./inicond/'))
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 global params
-params.CASE = 'guermond';
-params.nx           = 33;
-params.ny           = 33;
-params.Lx   = 2;
-params.Ly   = 2;
-params.eta          = 1.0e-4;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-params.nu           = 1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-params.dt_fixed     = 0; % fix the time step or adapt it dynamically
-params.CFL          = 0.05;
-params.T_end        = 0.4;
-params.dt           = 1e-4;%min(1e-1,params.eta);
-params.iplot        = 150; % plot every iplot time steps
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% grid
-% % % params.x = params.Ly*(0:params.nx-1)/(params.nx)-1.0;
-% % % params.y = params.Lx*(0:params.ny-1)/(params.ny)-1.0;
-% % % params.dx           = params.x(2)-params.x(1);
-% % % params.dy           = params.y(2)-params.y(1);
+addpath(genpath('../common_spectral/'))
+addpath(genpath('../common_active/'))
+addpath(genpath('../common_misc/'))
+addpath(genpath('../common_finite_differences/'))
+addpath(genpath('./mask/'))
+addpath(genpath('./inicond/'))
 
-params.xf = params.Ly*(0:params.nx)/(params.nx)-1.0;
-params.yf = params.Lx*(0:params.ny)/(params.ny)-1.0;
-
-params.dx           = params.xf(2)-params.xf(1);
-params.dy           = params.yf(2)-params.yf(1);
-% add this many points to omega_f
-N = 8;
-params.x = [ params.dx*(-N:-1)+params.xf(1)...
-    params.xf...
-    params.xf(end)+params.dx*(1:N) ];
-
-params.y = [ params.dy*(-N:-1)+params.xf(1)...
-    params.yf...
-    params.xf(end)+params.dy*(1:N) ];
-params.nx = length(params.x);
-params.ny = length(params.y);
-    params.Lx           = params.x(end)-params.x(1) + params.dx;
-    params.Ly           = params.y(end)-params.y(1) + params.dx;
-
-
-[params.X params.Y] = meshgrid(params.x,params.y);
-params.X            = params.X';
-params.Y            = params.Y';
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-params.mask         = zeros(params.nx,params.ny);
-params.dealias      = zeros(params.nx,params.ny);
-params.us           = zeros(params.nx,params.ny,2);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% create wavenumber matrices (global)
-params.kx             = (2*pi/params.Lx)*[0:(params.nx/2-1) (-params.nx/2):(-1)]; % Vector of wavenumbers
-params.ky             = (2*pi/params.Ly)*[0:(params.ny/2-1) (-params.ny/2):(-1)]; % Vector of wavenumbers
-[params.Kx,params.Ky] = meshgrid(params.kx,params.ky);
-params.Kx             = params.Kx';
-params.Ky             = params.Ky'
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-X = params.X;
-Y = params.Y;
+%%%%%%%%%%%%%%%%%%%%
+PARAMS_guermond()
+%%%%%%%%%%%%%%%%%%%%
 
 % initial condition
-vork_old = Inicond();
+vork_old = inicond();
 
 % create the mask
 create_mask();
