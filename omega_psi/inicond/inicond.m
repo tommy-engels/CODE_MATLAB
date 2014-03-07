@@ -1,4 +1,5 @@
 function vork = inicond()
+    %% initial conditions for omega-psi code
     global params
 
     switch params.inicond

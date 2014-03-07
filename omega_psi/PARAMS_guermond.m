@@ -31,6 +31,8 @@ params.CFL = 0.1;
 params.iplot = 100;
 params.iprogress = 500;
 params.dt_smaller_eps='yes';
+params.dt_fixed = 'yes';
+params.dt = 1e-4;
 
 
 % penalization

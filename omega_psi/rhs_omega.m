@@ -5,7 +5,7 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
     u = cofitxy_2d(uk);
         
     % deterimne time step 
-    if (params.dt_fixed==0)
+    if strcmp(params.dt_fixed,'yes')
         dt = min(params.CFL*params.dx/max(max(max(abs(u)))), params.eta);
     else
         dt = params.dt;
@@ -21,7 +21,7 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
     end
     
     %% add source term that forces exact solution in guermonds paper   
-    if strcmp(params.CASE,'guermond')
+    if strcmp(params.forcing,'guermond')
         x = params.X;
         y = params.Y;
         
