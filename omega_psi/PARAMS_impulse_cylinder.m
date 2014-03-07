@@ -1,14 +1,15 @@
-%% Parameters for guermonds testcase
+%% Parameters for cylinder testcase
 global params
 % geometry of the domain
 params.nx = 64;
 params.ny = 64;
-params.Lx = 2.0;
-params.Ly = 2.0;
+params.Lx = 4.0;
+params.Ly = 4.0;
 params.x = params.Lx*(0:params.nx-1)/params.nx;
 params.y = params.Lx*(0:params.nx-1)/params.nx;
 [params.X,params.Y]=meshgrid_t(params.x,params.y);
-
+params.dx = params.x(2)-params.x(1);
+params.dy = params.y(2)-params.y(1);
 
 % viscosity / reynolds number
 params.nu = 1/25;

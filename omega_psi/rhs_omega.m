@@ -2,7 +2,9 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
     % computes the non-linear terms + penalization in Fourier space.    
     global params
     uk = vor2u(vork);
+    uk = mean_flow_forcing(uk);
     u = cofitxy_2d(uk);
+    
         
     %% deterimne time step 
     if strcmp(params.dt_fixed,'yes')
