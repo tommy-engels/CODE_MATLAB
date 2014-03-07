@@ -1,4 +1,4 @@
-function [u_new, uk_new, pk_new] = RK2_SPLIT(u,uk,pk,dt)
+function [u_new, uk_new, pk_new] = rk2_implicit(time, dt,u,uk,pk)
     % here we try not to project the RHS, but instead use "traditional"
     % approaches to enforce incompressibility at the end of the time step
     global params
@@ -19,7 +19,7 @@ function [u_new, uk_new, pk_new] = RK2_SPLIT(u,uk,pk,dt)
     %----------------------------------------------------------------------
     % compute non-linear terms
     u_new = cofitxy_2d( uk_new );
-    nlk1 = rhs_up( uk_new, u_new, 'no' );
+    nlk1 = rhs_up( time, uk_new, u_new, 'no' );
     % add old pressure term
     nlk1 = nlk1 - gradient_2d(pk);    
     
@@ -29,7 +29,7 @@ function [u_new, uk_new, pk_new] = RK2_SPLIT(u,uk,pk,dt)
     uk_tmp = dealias_2d ( uk_tmp );
     u_tmp = cofitxy_2d(uk_tmp);
     % END OF EULER STEP
-    nlk2 = rhs_up( uk_tmp, u_tmp, 'no' );
+    nlk2 = rhs_up( time, uk_tmp, u_tmp, 'no' );
     nlk2 = nlk2 - gradient_2d(pk);
     
     % advance in time

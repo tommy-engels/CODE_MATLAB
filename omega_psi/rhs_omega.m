@@ -4,8 +4,7 @@ function [nlk, dt]=rhs_omega(t, vork, penalization)
     uk = vor2u(vork);
     uk = mean_flow_forcing(uk);
     u = cofitxy_2d(uk);
-    
-        
+            
     %% determine time step 
     if strcmp(params.dt_fixed,'no')
         dt = min(params.CFL*params.dx/max(max(max(abs(u)))), params.eta);

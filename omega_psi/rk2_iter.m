@@ -28,25 +28,19 @@ function [vork_new,dt] = rk2_iter(time, vork)
     u_gamma = zeros(params.nx,params.ny,2);
     
     dxdy = params.dx*params.dy;
-    err_old =  dxdy*sum(sum( ...
+    err_old = dxdy*sum(sum( ...
            abs(params.mask.*(v0(:,:,1)-u_gamma(:,:,1)))...
           +abs(params.mask.*(v0(:,:,2)-u_gamma(:,:,2)))...
-          ));
-    err_new = 0;
-    
+          ));    
     it = 0;
     delta = Inf;
     
-%     while (abs(err) > 5.0e-4) && (it<1000)
 %     while ( delta > 1.0001) && (it<1000) 
     for it=1:20
-
-
        uu(:,:,1) = fft2(params.mask.*(v0(:,:,1) - u_gamma(:,:,1)));
        uu(:,:,2) = fft2(params.mask.*(v0(:,:,2) - u_gamma(:,:,2)));
        
        gamma = gamma + vorticity_2d( uu );
-
        
        u_gamma = vor2u ( gamma );
        u_gamma  = cofitxy_2d( u_gamma );
@@ -56,11 +50,11 @@ function [vork_new,dt] = rk2_iter(time, vork)
            +abs(params.mask.*(v0(:,:,2)-u_gamma(:,:,2)))...
            ));
        delta = (err_old/err_new);
-%        fprintf('new=%e old=%e r=%e\n',err_new,err_old,delta)
+
        err_old=err_new;
        it=it+1;
     end
-%     fprintf('---%i\n',it)
+    
     fprintf('time=%e dt=%e iters=%i terminerr=%e\n',time, dt,it,err_old)
     vork_new = vork_new + gamma;
 end
