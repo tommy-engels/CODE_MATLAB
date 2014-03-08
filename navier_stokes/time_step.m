@@ -11,7 +11,6 @@ create_mask();
 % initial condition
 [u, uk] = inicond();
 
-
 time = 0; 
 it = 1;
 

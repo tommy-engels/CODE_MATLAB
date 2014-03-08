@@ -23,8 +23,7 @@ function [nlk] = rhs_up (time, uk, u, penal, diffusion)
             diffusion='no';
     end
     
-    nlk = zeros(params.nx,params.ny,2);
-    
+    nlk = zeros(params.nx,params.ny,2);    
     vor = cofitxy( vorticity_2d(uk) );
     
     %% non-linear transport, optionally penalization
@@ -59,7 +58,7 @@ function [nlk] = rhs_up (time, uk, u, penal, diffusion)
        sint=sin(time);
        
        Qx = 2*(pi^3)*(sin(time)^2)*cos(pi*X).*(sin(pi*X).^3).*(sin(2*pi*Y).^2)...
-             -2*(pi^3)*(sin(time)^2)*(sin(pi*X).^2).*sin(2*pi*X).*(sin(pi*Y).^2).*cos(2*pi*Y);
+           -2*(pi^3)*(sin(time)^2)*(sin(pi*X).^2).*sin(2*pi*X).*(sin(pi*Y).^2).*cos(2*pi*Y);
        Qy = 2*(pi^3)*(sin(time).^2).*(sin(2*pi*X).^2).*cos(pi*Y).*(sin(pi*Y).^3)...
            -2*(pi^3)*(sin(time).^2).*(sin(pi*X).^2).*cos(2*pi*X).*(sin(pi*Y).^2).*sin(2*pi*Y); 
       

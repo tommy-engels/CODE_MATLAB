@@ -1,4 +1,4 @@
-function [u_new, uk_new, pk] = RK2_classic(time, dt, u,uk,pk)
+function [u_new, uk_new, pk] = rk2_classic(time, dt, u,uk,pk)
 %% classic 2nd order RK2 scheme with exact integration of the diffusion term
 %--------------------------------------------------------------------------
 % explicit treatment of the penalization term

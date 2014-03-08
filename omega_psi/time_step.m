@@ -24,7 +24,7 @@ function time_step
         time = time + params.dt;
         it = it+1;
         
-        if (mod(it,params.iplot)==0)
+        if (mod(it,params.iplot)==0)||(time>params.T_end-params.dt)
             clf
             vor = cofitxy(vork);
             uk = vor2u(vork);
@@ -59,5 +59,5 @@ function time_step
     vor = cofitxy(vork);
     e = error_ref( time, u, vor );
     
-    save all.mat
+    save(params.name)
 end
