@@ -1,8 +1,13 @@
+%% Runge kutta 2 with strang splitting and separate projection
+% the strang splitting advanec the penalizaed navier-stokes eqn without the
+% pressure, and the operators
+% A(u) = -chi/eta *u
+% B(u) = (u.grad)u -nu*laplace(u)
+% are evolved serparately. The operator A is solved exactly (an
+% exponential)
+
 function [u_new, uk_new, pk_new] = rk2_implicit(time, dt,u,uk,pk)
-    % here we try not to project the RHS, but instead use "traditional"
-    % approaches to enforce incompressibility at the end of the time step
-    global params
-      
+    global params      
     %----------------------------------------------------------------------
     % 1st strang step, half a time step for penalization term
     %----------------------------------------------------------------------

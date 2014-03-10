@@ -1,3 +1,11 @@
+%% Runge kutta 2 with strang splitting, explicit version
+% like the implicit one, we use strang splitting for the penalized
+% Navier--stokes eqn. here, we introduce the operators
+% A(u) = -chi/eta * u - grad(p_eta);
+% B(u) = (u.grad)u - laplace(u) - grad(p_u)
+% thus both equations are advanced with their according projectors. This
+% scheme is of course useless; it does however show the "best" result
+% attainable with this type of splitting.
 function [u_new, uk_new, pk_new] = rk2_implicit(time, dt,u,uk,pk)
     global params      
     %----------------------------------------------------------------------
