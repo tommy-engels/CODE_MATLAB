@@ -30,21 +30,19 @@ params.error = 'guermond';
 
 % time parameters
 params.T_end = 0.5;
-params.CFL = 0.1;
-params.iplot = 100;
+params.CFL = 0.05;
+params.iplot = Inf;
 params.iprogress = 500;
-params.dt_smaller_eps='yes';
+params.dt_smaller_eps='no';
 params.dt_fixed = 'yes';
-params.dt = 1e-4;
-
+params.dt = 10e-3;
 
 % penalization
 params.ipenalization = 'yes';
 params.imoving = 'no';
 params.imask = 'guermond';
-params.eta = 1e-3;
+params.eta = 5e-4;
 params.active = 'passive';
-
 
 % sponge
 params.sponge='no';

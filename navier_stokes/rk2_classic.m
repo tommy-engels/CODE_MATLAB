@@ -8,6 +8,7 @@ function [u_new, uk_new, pk] = rk2_classic(time, dt, u,uk,pk)
 %--------------------------------------------------------------------------
     global params    
     if strcmp(params.dt_smaller_eps,'no') && (dt > params.eta)
+        fprintf('dt=%e eps=%e\n',dt,params.eta)
         warning('RK2_classic: time step restriction violated, result may be unstable');
     end    
     if ~(strcmp(params.active,'passive'))

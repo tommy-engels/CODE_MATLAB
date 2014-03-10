@@ -6,7 +6,7 @@ function time_step
 %     PARAMS_guermond_periodic()
     %%%%%%%%%%%%%%%%%%%%
     
-    method = @rk2_iter;
+    method = @rk2;
     
     % initial condition
     vork = inicond();

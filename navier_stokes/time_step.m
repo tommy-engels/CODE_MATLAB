@@ -1,10 +1,16 @@
-function [e1] = time_step ( eps, nx, method, CFL )
+function [e1] = time_step (eps,dtt,method)
 global params
 NAME = 'all.mat';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 PARAMS_guermond()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf('overwriting dt...\n')
+params.dt = dtt;
+fprintf('overwriting eps...\n')
+params.eta = eps;
+
 
 % create the mask + solid velocity
 create_mask();
@@ -23,6 +29,9 @@ while ( time < params.T_end )
        dt = min([ dt_CFL(u), dt_EPS(params.eta), dt_TIME(time,params.T_end) ]);
    else
        dt = min([ dt_CFL(u), dt_TIME(time,params.T_end) ]);
+   end
+   if strcmp(params.dt_fixed,'yes')
+       dt = params.dt;
    end
    
    % scheme

@@ -1,11 +1,11 @@
 %% Parameters for cylinder testcase
 global params
 % name of the run
-params.name = 'cylinder_iter20.mat';
+params.name = 'cylinder_classic_1024.mat';
 
 % geometry of the domain
-params.nx = 512;
-params.ny = 512;
+params.nx = 1024;
+params.ny = 1024;
 params.Lx = 4.0;
 params.Ly = 4.0;
 params.x = params.Lx*(0:params.nx-1)/params.nx;
@@ -37,7 +37,7 @@ params.dt = 1e-4;
 params.ipenalization = 'yes';
 params.imoving = 'no';
 params.imask = 'cylinder';
-params.eta = 1e-3;
+params.eta = 2.5e-4;
 params.active = 'passive';
 
 
